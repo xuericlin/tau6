@@ -16,7 +16,7 @@ def record():
     sd.wait()  # Wait until recording is finished
     write('output.wav', fs, myrecording)
     m = "output"
-    p =r"C:\Users\katey\Desktop\6.835\FinalProject"
+    p =r"C:\Users\katey\Desktop\6.835\FinalProject\tau6"
     try:
         sr = "rate of speech: " + my.myspsr(m,p)
     except:
