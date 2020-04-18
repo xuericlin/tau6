@@ -84,6 +84,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private DrawingImage imageSource;
 
         List<int> waveList = new List<int>();
+        List<int> handsDown = new List<int>();
+        List<int> crossedArms = new List<int>();
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -91,12 +93,27 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         public MainWindow()
         {
             InitializeComponent();
+
+            // waveList for waving hands; 6 consecutive frames indicate this
             waveList.Add(0);
             waveList.Add(0);
             waveList.Add(0);
             waveList.Add(0);
             waveList.Add(0);
             waveList.Add(0);
+
+            // handsDown; 100 consecutive frames of hands down to indicate idleness of hands
+            for (int i = 0; i < 100; i++) 
+            {
+              handsDown.Add(0);
+            }
+
+            // crossedArms; 50 consecutive frames of crossed hands represent crossed arms
+            for (int i = 0; i < 50; i++) 
+            {
+              crossedArms.Add(0);
+            }
+
         }
 
         /// <summary>
@@ -297,7 +314,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             foreach (Joint joint in skeleton.Joints)
             {
                 Brush drawBrush = null;
-
+                
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
                     drawBrush = this.trackedJointBrush;                    
@@ -313,17 +330,34 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 }
             }
 
-
-            // Right hand only
-            if (skeleton.Joints[JointType.HandRight].Position.Y > 
-                skeleton.Joints[JointType.ElbowRight].Position.Y)
+            // Crossed arms
+            if (skeleton.Joints[JointType.HandLeft].Position.X > 
+                skeleton.Joints[JointType.HandRight].Position.X)
             {
-                // Hand right of elbow
+                crossedArms.RemoveAt(0);
+                crossedArms.Add(1);
+            } else {
+                crossedArms.RemoveAt(0);
+                crossedArms.Add(0);
+            }
+
+
+            // Right hand and left hand idling/wave state
+            if (skeleton.Joints[JointType.HandRight].Position.Y > 
+                skeleton.Joints[JointType.ElbowRight].Position.Y ||
+                skeleton.Joints[JointType.HandLeft].Position.Y > 
+                skeleton.Joints[JointType.ElbowLeft].Position.Y)
+            {
+                // Hand right of elbow and Hand Left of elbow
                 if (skeleton.Joints[JointType.HandRight].Position.X > 
-                    skeleton.Joints[JointType.ElbowRight].Position.X)
+                    skeleton.Joints[JointType.ElbowRight].Position.X ||
+                    skeleton.Joints[JointType.HandLeft].Position.X > 
+                    skeleton.Joints[JointType.ElbowLeft].Position.X)
                 {
                     waveList.RemoveAt(0);
                     waveList.Add(1);
+                    handsDown.RemoveAt(0);
+                    handsDown.Add(0);
                     // System.Diagnostics.Debug.WriteLine("Upped hands");
                 }
             }
@@ -331,15 +365,31 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 // Hand dropped
                 waveList.RemoveAt(0);
                 waveList.Add(0);
+                handsDown.RemoveAt(0);
+                handsDown.Add(1);
                 // System.Diagnostics.Debug.WriteLine("Dropped hands");
             }
             // System.Diagnostics.Debug.WriteLine(waveList.Sum());
             
-            if (waveList.Sum() == 6) {
+            if (crossedArms.Sum() == 50) {
+                System.Diagnostics.Debug.WriteLine("Crossing your arms is not a friendly sign!");
+            } else if (waveList.Sum() == 6) {
                 System.Diagnostics.Debug.WriteLine("I am waving back at you!");
+            } else if (handsDown.Sum() == 1000) {
+                System.Diagnostics.Debug.WriteLine("Try to keep your hands out your pocket!");
             } else {
                 System.Diagnostics.Debug.WriteLine("Looking for changes...");
             }
+
+            // Feet position difference
+            if (skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X > 50)
+            {
+                System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootRight].Position.X);
+                System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootLeft].Position.X);
+                System.Diagnostics.Debug.WriteLine("\n Your feet positions are too wide! Adjust it to be tighter \n");
+            }
+
+
         }
 
         /// <summary>
@@ -411,5 +461,30 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 }
             }
         }
+
+        /**
+        static void _bodyFrameReader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
+        {
+            var frameReference = e.FrameReference;
+            var frame = frameReference.AcquireFrame();
+            if (frame == null) return;
+            using (frame)
+            {
+                frame.GetAndRefreshBodyData(_bodies);
+                foreach (var body in _bodies)
+                {
+                    if (!body.IsTracked) continue;
+                    if (body.HandRightState == HandState.Unknown) continue;
+                    var handRightState = body.HandRightState;
+                    if (_lastHandRightState != body.HandRightState)
+                   {
+                        Console.WriteLine("Right Hand State:{0}", handRightState);
+                        _lastHandRightState = body.HandRightState;
+                    }
+                }
+            }
+        }
+        **/
+
     }
 }
