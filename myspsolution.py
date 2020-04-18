@@ -60,7 +60,7 @@ def myspsr(m,p):
         return str(z3)
     except:
         z3=0
-        print ("Try again the sound of the audio was not clear")
+        print ("Try again the sound of the audio was not clear") 
     return;
 
 def myspatc(m,p):

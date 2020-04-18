@@ -44,7 +44,7 @@ def clicked():
     lbl['text'] = "..."
     record()
     return
-
+ 
 btn = Button(window, text="Record", command=clicked)
 
 btn.grid(column=1, row=0)
