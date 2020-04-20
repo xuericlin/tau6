@@ -54,8 +54,8 @@ def gui(root, queue):
     root.title("TAU6")
     root.geometry("500x200")
     
-    tk.Button(root, text="Record", command=lambda : queue.put(Messages.RECORD)).pack()
-    tk.Label(root, textvariable=label).pack()
+    tk.Button(root, font=("Helvetica", 12), text="Record", command=lambda : queue.put(Messages.RECORD)).pack()
+    tk.Label(root, font=("Helvetica", 16), textvariable=label).pack()
     
     return SimpleNamespace(label=label)
     
