@@ -18,7 +18,7 @@ def updatecycle(guiref, model, queue):
         if msg == Messages.RECORD:
             guiref.label.set("Recording")
             fs = 44100  # Sample rate
-            seconds = 15  # Duration of recording
+            seconds = 60  # Duration of recording
             myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
             sd.wait()  # Wait until recording is finished
             guiref.label.set("Analyzing recording")
@@ -26,11 +26,11 @@ def updatecycle(guiref, model, queue):
             m = "output"
             p =r"C:\Users\katey\Desktop\6.835\FinalProject\tau6"
             try:
-                sr = "rate of speech: " + my.myspsr(m,p) +" sylabylls per second"
+                sr = "rate of speech: " + my.myspsr(m,p) +" syllables per second"
             except:
                 sr = "rate of speech: n/a"
             try:
-                atc = "rate of articulation: " +my.myspatc(m,p) +" sylabylls per second"
+                atc = "rate of articulation: " +my.myspatc(m,p) +" syllables per second"
             except:
                 atc = "rate of articulation: n/a"
             try:
@@ -41,7 +41,7 @@ def updatecycle(guiref, model, queue):
                 bala = "ratio of time speaking to pausing: " + my.myspbala(m,p)
             except:
                 bala = "ratio of speech to pauses: n/a"
-            analysis = "\n"sr+"\n"+atc+"\n"+paus+"\n"+bala
+            analysis = "\n"+sr+"\n"+atc+"\n"+paus+"\n"+bala
             guiref.label.set(analysis)
             
 
@@ -57,7 +57,7 @@ def gui(root, queue):
     tk.Button(root, text="Record", command=lambda : queue.put(Messages.RECORD)).pack()
     tk.Label(root, textvariable=label).pack()
     
-    return SimpleNamespace(label=label, btn_name=btn_name)
+    return SimpleNamespace(label=label)
     
 
 if __name__ == '__main__':
