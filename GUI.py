@@ -18,7 +18,7 @@ def updatecycle(guiref, model, queue):
         if msg == Messages.RECORD:
             guiref.label.set("Recording")
             fs = 44100  # Sample rate
-            seconds = 60  # Duration of recording
+            seconds = 25  # Duration of recording
             myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
             sd.wait()  # Wait until recording is finished
             guiref.label.set("Analyzing recording")
@@ -26,21 +26,24 @@ def updatecycle(guiref, model, queue):
             m = "output"
             p =r"C:\Users\katey\Desktop\6.835\FinalProject\tau6"
             try:
-                sr = "rate of speech: " + my.myspsr(m,p) +" syllables per second"
+                sr = "your rate of speech: " + my.myspsr(m,p) +" syllables/sec"
             except:
-                sr = "rate of speech: n/a"
+                sr = "your rate of speech: n/a"
             try:
-                atc = "rate of articulation: " +my.myspatc(m,p) +" syllables per second"
-            except:
-                atc = "rate of articulation: n/a"
-            try:
-                paus = "number of pauses during speech: " +my.mysppaus(m,p)
+                atc = "rate of articulation: " +my.myspatc(m,p) +" syllables/sec"
+##            except:
+##                atc = "rate of articulation: n/a"
+##            try:
+##                paus = "number of pauses during speech: " +my.mysppaus(m,p)
             except:
                 paus = "number of pauses: n/a"
             try:
                 bala = "ratio of time speaking to pausing: " + my.myspbala(m,p)
             except:
                 bala = "ratio of speech to pauses: n/a"
+            sr+="\n Obama state adress: 2 syl/sec\nWeather report 3 syl/sec\nfootball pep talk: 3 syl/sec"
+            atc+="\n Obama state adress: 4 syl/sec\nWeather report 4 syl/sec\nfootball pep talk: 5 syl/sec"
+            bala+="\n Obama state adress: .6 \nWeather report .8\nfootball pep talk: .6"
             analysis = "\n"+sr+"\n"+atc+"\n"+paus+"\n"+bala
             guiref.label.set(analysis)
             
