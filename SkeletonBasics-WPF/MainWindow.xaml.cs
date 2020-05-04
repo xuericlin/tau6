@@ -86,6 +86,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         List<int> waveList = new List<int>();
         List<int> handsDown = new List<int>();
         List<int> crossedArms = new List<int>();
+        string lastAction;
+
+        List<float> sways = new List<float>();
+        List<int> holdHands = new List<int>();
+        int swaysCount = 0;
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -94,6 +99,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         {
             InitializeComponent();
 
+            lastAction = "undefined";
             // waveList for waving hands; 6 consecutive frames indicate this
             waveList.Add(0);
             waveList.Add(0);
@@ -112,6 +118,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             for (int i = 0; i < 50; i++) 
             {
               crossedArms.Add(0);
+            }
+
+            // for detecting swaying motioons; 50 frames
+
+            // for detecting holding hand for too long
+            for (int i = 0; i < 100; i++) 
+            {
+              holdHands.Add(0);
             }
 
         }
@@ -336,10 +350,30 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 crossedArms.RemoveAt(0);
                 crossedArms.Add(1);
+                waveList.RemoveAt(0);
+                waveList.Add(0);
             } else {
                 crossedArms.RemoveAt(0);
                 crossedArms.Add(0);
             }
+
+
+            // Hold hands
+            if (skeleton.Joints[JointType.HandLeft].Position.X -
+                skeleton.Joints[JointType.HandRight].Position.X <= 10 || 
+                skeleton.Joints[JointType.HandLeft].Position.X -
+                skeleton.Joints[JointType.HandRight].Position.X >= -10)
+            {
+                holdHands.RemoveAt(0);
+                holdHands.Add(1);
+                waveList.RemoveAt(0);
+                waveList.Add(0);
+            } else {
+                crossedArms.RemoveAt(0);
+                crossedArms.Add(0);
+            }
+
+
 
 
             // Right hand and left hand idling/wave state
@@ -372,21 +406,66 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             // System.Diagnostics.Debug.WriteLine(waveList.Sum());
             
             if (crossedArms.Sum() == 50) {
-                System.Diagnostics.Debug.WriteLine("Crossing your arms is not a friendly sign!");
+                if (lastAction != "crossed") {
+                    System.Diagnostics.Debug.WriteLine("Crossing your arms is not a friendly sign!");
+                    lastAction = "crossed";
+                }
             } else if (waveList.Sum() == 6) {
-                System.Diagnostics.Debug.WriteLine("I am waving back at you!");
-            } else if (handsDown.Sum() == 1000) {
-                System.Diagnostics.Debug.WriteLine("Try to keep your hands out your pocket!");
+                if (lastAction != "waving") {
+                    System.Diagnostics.Debug.WriteLine("I am waving back at you!");
+                    lastAction = "waving";
+                }
+            } else if (handsDown.Sum() == 100) {
+                if (lastAction != "pocket") {
+                    lastAction = "pocket";
+                    System.Diagnostics.Debug.WriteLine("Try to keep your hands out your pocket!");
+                }
+            } else if (holdHands.Sum() == 100) {
+                if (lastAction != "holdHands") {
+                    lastAction = "holdHands";
+                    System.Diagnostics.Debug.WriteLine("Holding hands for too long may seem too shy!");
+                }
             } else {
-                System.Diagnostics.Debug.WriteLine("Looking for changes...");
+                if (lastAction != "nothing") {
+                    lastAction = "nothing";
+                    System.Diagnostics.Debug.WriteLine("\nPractice your gestures!\n");
+                }
             }
 
             // Feet position difference
-            if (skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X > 50)
+            if (skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X > 0.4)
             {
-                System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootRight].Position.X);
-                System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootLeft].Position.X);
-                System.Diagnostics.Debug.WriteLine("\n Your feet positions are too wide! Adjust it to be tighter \n");
+                if (lastAction != "wide_feet") {
+                    System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X);
+
+                    System.Diagnostics.Debug.WriteLine("\n Your feet positions are too wide! Adjust it to be tighter \n");
+                    lastAction = "wide_feet";
+                }
+            }
+
+            // Swaying
+            sways.Add(skeleton.Joints[JointType.HipCenter].Position.X);
+            if (sways.Count > 100) {
+                sways.RemoveAt(0);        
+
+                swaysCount = 0;
+                float avg = Queryable.Average(sways.AsQueryable());
+                for (int i = 0; i < 100; i++) 
+                {
+                    if (sways[i] > avg) {
+                        swaysCount += 1;
+                    }
+                }
+                System.Diagnostics.Debug.WriteLine("sways counting");
+                System.Diagnostics.Debug.WriteLine(sways);
+                System.Diagnostics.Debug.WriteLine(swaysCount);
+
+                if (lastAction != "sway") {
+                    if (swaysCount > 45 && swaysCount < 55) {
+                        lastAction = "sway";
+                        System.Diagnostics.Debug.WriteLine("Watch out for swaying movements!");
+                    }
+                }
             }
 
 
