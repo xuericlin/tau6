@@ -433,11 +433,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             // Feet position difference
-            if (skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X > 0.4)
+            if (skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X > 0.5)
             {
-                if (lastAction != "wide_feet") {
-                    System.Diagnostics.Debug.WriteLine(skeleton.Joints[JointType.FootRight].Position.X - skeleton.Joints[JointType.FootLeft].Position.X);
-
+                if (lastAction == "nothing") {
                     System.Diagnostics.Debug.WriteLine("\n Your feet positions are too wide! Adjust it to be tighter \n");
                     lastAction = "wide_feet";
                 }
@@ -452,16 +450,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 float avg = Queryable.Average(sways.AsQueryable());
                 for (int i = 0; i < 100; i++) 
                 {
-                    if (sways[i] > avg) {
+                    if (sways[i] > avg + 0.02) {
                         swaysCount += 1;
                     }
+
                 }
-                System.Diagnostics.Debug.WriteLine("sways counting");
-                System.Diagnostics.Debug.WriteLine(sways);
-                System.Diagnostics.Debug.WriteLine(swaysCount);
 
                 if (lastAction != "sway") {
-                    if (swaysCount > 45 && swaysCount < 55) {
+                    if (swaysCount > 35 && swaysCount < 65) {
                         lastAction = "sway";
                         System.Diagnostics.Debug.WriteLine("Watch out for swaying movements!");
                     }
