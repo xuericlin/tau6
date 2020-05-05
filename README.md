@@ -33,10 +33,11 @@ This repository will be broken down into two parts.
 Under the folder SkeletonBasics-WPF, we have all the Kinect code contained inside. 
 The code inside the SkeletonBasics-WPF folder is mostly C# and can be viewed and executed through Visual Studio.
 
-MainWindow.xaml.cs is the maine executable that handles the backend of the project and recognizing the gestures. 
+MainWindow.xaml.cs is the main executable that handles the backend of the project and recognizing the gestures. 
 This is the meat of the work where we recognize gestures, change seated status, and handle drawing the skeleton frame.
 MainWindow.xaml works as a front end for the UI. The rest of the file are part of the skeleton code that sets up the Visual Studio program to run
 our program.
+The code here is thoroughly commented, so a regular coder should be able to easily understand what the methods and variables are in the code.
 
 The rest of the code at the root directory are for the voice analysis portion of TAU6.
 
