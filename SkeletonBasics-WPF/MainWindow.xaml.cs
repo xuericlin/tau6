@@ -360,17 +360,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             // Hold hands
             if (skeleton.Joints[JointType.HandLeft].Position.X -
-                skeleton.Joints[JointType.HandRight].Position.X <= 10 || 
+                skeleton.Joints[JointType.HandRight].Position.X <= 0.1 && 
                 skeleton.Joints[JointType.HandLeft].Position.X -
-                skeleton.Joints[JointType.HandRight].Position.X >= -10)
+                skeleton.Joints[JointType.HandRight].Position.X >= -0.1)
             {
                 holdHands.RemoveAt(0);
                 holdHands.Add(1);
-                waveList.RemoveAt(0);
-                waveList.Add(0);
             } else {
-                crossedArms.RemoveAt(0);
-                crossedArms.Add(0);
+                holdHands.RemoveAt(0);
+                holdHands.Add(0);
             }
 
 
@@ -404,7 +402,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 // System.Diagnostics.Debug.WriteLine("Dropped hands");
             }
             // System.Diagnostics.Debug.WriteLine(waveList.Sum());
-            
             if (crossedArms.Sum() == 50) {
                 if (lastAction != "crossed") {
                     System.Diagnostics.Debug.WriteLine("Crossing your arms is not a friendly sign!");
@@ -457,7 +454,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 }
 
                 if (lastAction != "sway") {
-                    if (swaysCount > 35 && swaysCount < 65) {
+                    if (swaysCount > 38 && swaysCount < 55) {
                         lastAction = "sway";
                         System.Diagnostics.Debug.WriteLine("Watch out for swaying movements!");
                     }
