@@ -14,6 +14,8 @@ Update your python version to Python3.5+.
 Download Visual Studio to execute the Kinect code.
 https://visualstudio.microsoft.com/downloads/
 
+If you do not have pip, install pip following the instructions at this site: https://pip.pypa.io/en/stable/installing/
+
 Pip install the my-voice-analysis library
 $pip install my-voice-analysis
 
