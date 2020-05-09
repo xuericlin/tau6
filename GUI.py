@@ -19,13 +19,20 @@ def updatecycle(guiref, model, queue):
             guiref.label.set("Recording! Please wait...\n\n")
             guiref.button.set("...")
             fs = 44100  # Sample rate
-            seconds = 60  # Duration of recording
+            
+            #*** Change length of time before recording times out here.***
+            seconds = 60
+            
             myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
             sd.wait()  # Wait until recording is finished
             guiref.label.set("Analyzing your recording...\n\n")
             write('output.wav', fs, myrecording)
             m = "output"
+
+            #*** Change the path below to wherever file in which you've stored the other tau6 files.***
             p =r"C:\Users\katey\Desktop\6.835\FinalProject\tau6"
+            
+            #attempts to obtain different speech analysis statistics and attaches appropriate advice
             try:
                 mysr = my.myspsr(m,p)
                 sr = "your rate of speech: " + mysr +" syllables/sec"
@@ -52,10 +59,6 @@ def updatecycle(guiref, model, queue):
             except:
                 atc = "your rate of articulation: n/a"
                 aradv = "Try again.\nClear articulation and enunciation will help people understand your speech much better."
-#            try:
-#                paus = "number of pauses during speech: " +my.mysppaus(m,p)
-#            except:
-#                paus = "number of pauses: n/a"
             try:
                 mybal = my.myspbala(m,p)
                 bala = "your ratio of time speaking to pausing: " + mybal
@@ -69,9 +72,11 @@ def updatecycle(guiref, model, queue):
             except:
                 bala = "your ratio of speech to pauses: n/a"
                 baladv = "Try again. Taking your time with your words increases their weight, while still following the thread of your intentions."
+            #adding the comparison values to the label
             sr+="\n Obama state adress: 2 syl/sec\nweather report: 3 syl/sec\nfootball pep talk: 3 syl/sec"
             atc+="\n Obama state adress: 4 syl/sec\nweather report: 4 syl/sec\nfootball pep talk: 5 syl/sec"
             bala+="\n Obama state adress: .6 \nweather report: .8\nfootball pep talk: .6"
+            #piecing bits of label together
             analysis = sr+"\n\n"+sradv+"\n\n"+atc+"\n\n"+aradv+"\n\n"+bala+"\n\n"+baladv+"\n\nPress the record button to try again."
             guiref.label.set(analysis)
             guiref.button.set("Record")
@@ -84,7 +89,7 @@ def gui(root, queue):
     button.set("Record")
 
     root.title("TAU6")
-
+    #the button command allows us to record during the update cycle
     tk.Button(root, font=("Helvetica", 12), textvariable=button, command=lambda : queue.put(Messages.RECORD)).pack()
     tk.Label(root, font=("Helvetica", 13), textvariable=label).pack()
     
@@ -95,11 +100,8 @@ if __name__ == '__main__':
     q = Queue()
     root = tk.Tk()
     guiref = gui(root,q)
-    model = SimpleNamespace() #The data managed by your application
+    model = SimpleNamespace() #The GUI label references
     t = threading.Thread(target=updatecycle, args=(guiref, model, q,))
     t.daemon = True #daemonize it, so it will die when the program stops
     t.start()
     tk.mainloop()
-
-
-    
