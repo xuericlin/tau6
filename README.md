@@ -14,19 +14,19 @@ Update your python version to Python3.5+.
 Download Visual Studio to execute the Kinect code.
 https://visualstudio.microsoft.com/downloads/
 
-Download the voice analysis portion.
-Kate Lorem ipsum
+Pip install the my-voice-analysis lirbrary
+pip install my-voice-analysis
 
-
+Pip install the sounddevice library
+pip install sounddevice
 
 3) Make edits.
-Edit the GUI.py file in the root directory. In line 28, change the path to the tau6 directory that you have cloned this repository into.
-In line 22, you can change the number of seconds you want yourself to be recorded. You can also change the output file name and path in line 26.
+Edit the GUI.py file in the root directory. In line 33, change the path to the tau6 directory that you have cloned this repository into.
+In line 24, you can change the number of seconds you want yourself to be recorded. You can also change the output file name and path in lines 29 and 30.
 
 3) Run the program.
 Run the program by running the play button in Visual Studio after opening the MainWindow.xaml.cs file inside SkeletonBasics-WPF folder in Visual Studio.
 Now, use python to run GUI.py to also run the audio portion of TAU6.
-
 
 ## Code Explanations
 This repository will be broken down into two parts. 
@@ -40,4 +40,4 @@ our program.
 The code here is thoroughly commented, so a regular coder should be able to easily understand what the methods and variables are in the code.
 
 The rest of the code at the root directory are for the voice analysis portion of TAU6.
-
+GUI.py contains the runnable module for the application. myspsolution.py contains the functions
