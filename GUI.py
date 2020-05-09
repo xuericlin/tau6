@@ -19,7 +19,7 @@ def updatecycle(guiref, model, queue):
             guiref.label.set("Recording! Please wait...\n\n")
             guiref.button.set("...")
             fs = 44100  # Sample rate
-            seconds = 45  # Duration of recording
+            seconds = 60  # Duration of recording
             myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
             sd.wait()  # Wait until recording is finished
             guiref.label.set("Analyzing your recording...\n\n")

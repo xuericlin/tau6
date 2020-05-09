@@ -126,10 +126,10 @@ def myspbala(m,p):
         #print (objects[0]) # This will print the info from the sound object, and objects[0] is a parselmouth.Sound object
         z1=str( objects[1]) # This will print the info from the textgrid object, and objects[1] is a parselmouth.Data object with a TextGrid inside
         z2=z1.strip().split()
-        z3=int(z2[3]) # will be the integer number 10
+        z3=float(z2[3]) # will be the integer number 10
         z4=float(z2[6]) # will be the floating point number 8.3
         #print ("balance=",z4,"# ratio (speaking duration)/(original duration)")
-        return str(z4)
+        return str(round(z4,3))
     except:
         z4=0
         print ("Try again the sound of the audio was not clear")
