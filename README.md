@@ -15,10 +15,10 @@ Download Visual Studio to execute the Kinect code.
 https://visualstudio.microsoft.com/downloads/
 
 Pip install the my-voice-analysis lirbrary
-pip install my-voice-analysis
+$pip install my-voice-analysis
 
 Pip install the sounddevice library
-pip install sounddevice
+$pip install sounddevice
 
 3) Make edits.
 Edit the GUI.py file in the root directory. In line 33, change the path to the tau6 directory that you have cloned this repository into.
@@ -40,4 +40,6 @@ our program.
 The code here is thoroughly commented, so a regular coder should be able to easily understand what the methods and variables are in the code.
 
 The rest of the code at the root directory are for the voice analysis portion of TAU6.
-GUI.py contains the runnable module for the application. myspsolution.py contains the functions
+GUI.py contains the runnable module for the application with comments detailing each section. myspsolution.py contains the slightly edited analysis functions, and uses information from myspsolution.praat.
+
+The different TextGrid and wav files contain either the output data, the ones named output, or samples of the comparison data, the obama, motivational, and news files. The statistics drawn from the comparison files are summarized in the Comparison Data doc.
